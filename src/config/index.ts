@@ -6,7 +6,7 @@ export const defaults = {
 		smilLocation: 'https://butikstv.centrumkanalen.com/play/smil/234.smil',
 	},
 	constants: {
-		extractedElements: ['video', 'audio', 'img', 'ref'],
+		extractedElements: ['video', 'audio', 'img', 'ref', 'video2', 'img2'],
 		cssElementsPosition: ['left', 'top', 'bottom', 'width', 'height'],
 		cssElements: ['z-index'],
 		additionalCssExtract: ['fit'],

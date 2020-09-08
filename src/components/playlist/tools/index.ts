@@ -12,6 +12,7 @@ import {
 	SMILImage,
 	SMILAudio,
 	SMILWidget,
+	PriorityObject,
 } from '../../../models';
 import { defaults as config } from '../../../config';
 import { ObjectFitEnum, SMILScheduleEnum } from '../../../enums';
@@ -336,6 +337,16 @@ export function extractDayInfo(timeRecord: string): any {
 	return {
 		timeRecord,
 		dayInfo,
+	};
+}
+
+export function createPriorityObject(priorityClass: object, priorityLevel: number): PriorityObject {
+	return {
+		priorityLevel,
+		lower: get(priorityClass, 'lower', 'defer'),
+		peer: get(priorityClass, 'peer', 'stop'),
+		higher: get(priorityClass, 'higher', 'pause'),
+		pauseDisplay: get(priorityClass, 'pauseDisplay', 'show'),
 	};
 }
 

@@ -153,5 +153,6 @@ function extractBodyContent(xmlObject: object): SMILPlaylist {
 
 export async function processSmil(xmlFile: string): Promise<SMILFileObject> {
 	const smilObject = await parseXml(xmlFile);
+	// console.log(JSON.stringify(smilObject));
 	return smilObject;
 }
