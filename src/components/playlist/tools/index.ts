@@ -12,6 +12,7 @@ import {
 	SMILImage,
 	SMILAudio,
 	SMILWidget, PlaylistElement,
+	PriorityObject,
 } from '../../../models';
 import { ObjectFitEnum, SMILScheduleEnum, XmlTags } from '../../../enums';
 import moment from 'moment';
@@ -422,6 +423,16 @@ export function createHtmlElement(htmlElement: string, filepath: string, regionI
 	element.style.borderWidth = '0px';
 
 	return element;
+}
+
+export function createPriorityObject(priorityClass: object, priorityLevel: number): PriorityObject {
+	return {
+		priorityLevel,
+		lower: get(priorityClass, 'lower', 'defer'),
+		peer: get(priorityClass, 'peer', 'stop'),
+		higher: get(priorityClass, 'higher', 'pause'),
+		pauseDisplay: get(priorityClass, 'pauseDisplay', 'show'),
+	};
 }
 
 export function resetBodyContent() {

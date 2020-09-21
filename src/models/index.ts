@@ -143,8 +143,30 @@ export type PlaylistElement = {
 	priorityClass?: PlaylistElement,
 };
 
-export type CurrentlyPlaying = {
-	[regionName: string]: SMILWidget | SMILImage | SMILAudio | SMILVideo,
+export type PriorityObject = {
+	priorityLevel: number,
+	lower: string,
+	peer: string,
+	higher: string,
+	pauseDisplay: string,
+};
+
+export type CurrentlyPlayingPriority = {
+	[regionName: string]: CurrentlyPlayingRegion[],
+};
+
+export type CurrentlyPlayingRegion = {
+	media: SMILWidget | SMILImage | SMILAudio | SMILVideo,
+	currentlyPlaying: SMILWidget | SMILImage | SMILAudio | SMILVideo,
+	priority: PriorityObject,
+	player: {
+		contentPause: number,
+		stop: boolean,
+		endTime: number,
+		playing: boolean,
+	},
+	parent: string,
+	behaviour: string,
 };
 
 export type SMILFileObject = SMILPlaylist & RegionsObject & DownloadsList;

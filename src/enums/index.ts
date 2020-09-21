@@ -31,9 +31,9 @@ export enum ObjectFitEnum {
 	cover = 'cover',
 	objectFit = 'object-fit',
 }
-
+// TODO: remove video2 and img2 tags
 export const XmlTags = {
-	extractedElements: ['video', 'audio', 'img', 'ref'],
+	extractedElements: ['video', 'audio', 'img', 'ref', 'video2', 'img2'],
 	cssElementsPosition: ['left', 'top', 'bottom', 'width', 'height'],
 	cssElements: ['z-index'],
 	additionalCssExtract: ['fit'],
