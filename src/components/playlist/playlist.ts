@@ -506,6 +506,17 @@ export class Playlist {
 		}
 	}
 
+	private findFirstFreeRegion(regions: RegionAttributes[]): number {
+		let index = 0;
+		for (const region of regions) {
+			if (isNil(this.currentlyPlayingPriority[region.regionName])) {
+				return index;
+			}
+			index += 1;
+		}
+		return 0;
+	}
+
 	private setIntroUrl(introObject: object) {
 		this.introObject = introObject;
 	}

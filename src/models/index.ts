@@ -35,7 +35,8 @@ export type RegionAttributes = {
 	height: number,
 	"z-index"?: number,
 	fit?: string,
-	[key: string]: string | number | undefined,
+	region: RegionAttributes,
+	[key: string]: any,
 };
 
 export type SMILVideo = {
@@ -96,6 +97,15 @@ export type DownloadsList = {
 	audio: SMILAudio[],
 	intro: SMILIntro[],
 	[key: string]: SMILVideo[] | SMILImage[] | SMILWidget[] | SMILAudio[] | SMILIntro[],
+};
+
+export type TriggerList = {
+	triggers: { [key: string]: TriggerObject },
+};
+
+export type TriggerObject = {
+	begin: string,
+	[key: string]: SMILVideo[] | SMILImage[] | SMILWidget[] | SMILAudio[] | SMILIntro[] | string,
 };
 
 export type CheckETagFunctions = {
@@ -169,7 +179,7 @@ export type CurrentlyPlayingRegion = {
 	behaviour: string,
 };
 
-export type SMILFileObject = SMILPlaylist & RegionsObject & DownloadsList;
+export type SMILFileObject = SMILPlaylist & RegionsObject & DownloadsList & TriggerList;
 
 export type SMILMedia = SMILImage | SMILImage [] | SMILWidget | SMILWidget[] | SMILAudio | SMILAudio[] | SMILVideo | SMILVideo[];
 export type SMILMediaSingle = SMILImage  | SMILWidget | SMILAudio | SMILVideo | SMILIntro;

@@ -3,6 +3,7 @@ export enum SMILEnums {
 	rootLayout = 'root-layout',
 	defaultRefresh = 20,
 	defaultDownloadRetry = 60,
+	triggerFormat = 'trigger',
 }
 
 export enum FileStructure {
