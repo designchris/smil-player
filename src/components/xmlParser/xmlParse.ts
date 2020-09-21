@@ -2,6 +2,8 @@ import * as xml2js from 'xml2js';
 // @ts-ignore
 import { JefNode } from 'json-easy-filter';
 import { DOMParser } from 'xmldom';
+import get from 'lodash/get';
+import merge from 'lodash/merge';
 import {
 	RegionAttributes,
 	RegionsObject,
@@ -9,7 +11,7 @@ import {
 	DownloadsList,
 	SMILFileObject,
 	SMILPlaylist,
-	XmlSmilObject, SMILMediaSingle,
+	XmlSmilObject, SMILMediaSingle, TriggerList,
 } from '../../models';
 import { SMILEnums, XmlTags } from '../../enums';
 import { debug, containsElement } from './tools';
@@ -24,6 +26,9 @@ async function parseXml(xmlFile: string): Promise<SMILFileObject> {
 	};
 	const playableMedia = {
 		playlist: {},
+	};
+	const triggerList: TriggerList = {
+		triggers: {},
 	};
 	const xmlFileSerialized: Document = new DOMParser().parseFromString(xmlFile, "text/xml");
 	debug('Xml string serialized : %O', xmlFileSerialized);
@@ -63,13 +68,17 @@ async function parseXml(xmlFile: string): Promise<SMILFileObject> {
 				}
 			});
 		}
+
+		if (get(node.value, 'begin', 'default').startsWith(SMILEnums.triggerFormat)) {
+			triggerList.triggers![node.value.begin!] = merge(triggerList.triggers![node.value.begin!], node.value);
+		}
 	});
 
 	debug('Extracted regions object: %O', regions);
 	debug('Extracted playableMedia object: %O', playableMedia);
 	debug('Extracted downloads object: %O', downloads);
 
-	return Object.assign({}, regions, playableMedia, downloads);
+	return Object.assign({}, regions, playableMedia, downloads, triggerList);
 }
 
 function extractRegionInfo(xmlObject: RegionsObject): RegionsObject {
@@ -139,5 +148,6 @@ function extractRegionInfo(xmlObject: RegionsObject): RegionsObject {
 
 export async function processSmil(xmlFile: string): Promise<SMILFileObject> {
 	const smilObject = await parseXml(xmlFile);
+	console.log(JSON.stringify(smilObject));
 	return smilObject;
 }

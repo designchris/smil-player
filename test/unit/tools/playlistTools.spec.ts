@@ -1,6 +1,5 @@
 import * as chai from 'chai';
 import moment from 'moment';
-import isNil = require('lodash/isNil');
 import {
 	getRegionInfo,
 	sleep,
@@ -12,6 +11,9 @@ import {
 } from '../../../src/components/playlist/tools';
 import { formatDate, formatWeekDate, computeWaitInterval } from '../../testTools/testTools';
 import { mockSMILFileParsed234 } from '../../../src/components/playlist/mock/mock234';
+import { mockSMILFileTriggers } from '../../../src/components/playlist/mock/mockTriggers';
+import { mockSMILFileTriggersNoTopLeft } from '../../../src/components/playlist/mock/mockTriggersNoTopLeft';
+import { mockParsedNestedRegion, mockParsed234Layout, mockParsed234Region, mockParsedNestedRegionNoTopLeft } from '../../../src/components/playlist/mock/mockRegions';
 import { Playlist } from '../../../src/components/playlist/playlist';
 import { Files } from '../../../src/components/files/files';
 import { SosModule } from '../../../src/models';
@@ -23,35 +25,27 @@ describe('Playlist tools component', () => {
 
 	describe('Playlist tools component getRegionInfo tests', () => {
 		it('Should return default region for non-existing region name', () => {
-
-			let expectedRegion: any = mockSMILFileParsed234.rootLayout;
-			expectedRegion = {
-				...expectedRegion,
-				...(!isNil(expectedRegion.top) && {top: parseInt(expectedRegion.top)}),
-				...(!isNil(expectedRegion.left) && {left: parseInt(expectedRegion.left)}),
-				width: parseInt(expectedRegion.width),
-				height: parseInt(expectedRegion.height),
-			};
-
 			// @ts-ignore
 			const response = getRegionInfo(mockSMILFileParsed234, 'InvalidRegionName');
-			expect(response).to.eql(expectedRegion);
+			expect(response).to.eql(mockParsed234Layout);
 		});
 
 		it('Should return correct region for existing region name', () => {
-
-			let expectedRegion: any = mockSMILFileParsed234.region.video;
-			expectedRegion = {
-				...expectedRegion,
-				...(!isNil(expectedRegion.top) && {top: parseInt(expectedRegion.top)}),
-				...(!isNil(expectedRegion.left) && {left: parseInt(expectedRegion.left)}),
-				width: parseInt(expectedRegion.width),
-				height: parseInt(expectedRegion.height),
-			};
-
 			// @ts-ignore
 			const response = getRegionInfo(mockSMILFileParsed234, 'video');
-			expect(response).to.eql(expectedRegion);
+			expect(response).to.eql(mockParsed234Region);
+		});
+
+		it('Should return correct region values for nested regions', () => {
+			// @ts-ignore
+			const response = getRegionInfo(mockSMILFileTriggers, 'video');
+			expect(response).to.eql(mockParsedNestedRegion);
+		});
+
+		it('Should return correct region values for nested regions without top and left specified', () => {
+			// @ts-ignore
+			const response = getRegionInfo(mockSMILFileTriggersNoTopLeft, 'video');
+			expect(response).to.eql(mockParsedNestedRegionNoTopLeft);
 		});
 	});
 

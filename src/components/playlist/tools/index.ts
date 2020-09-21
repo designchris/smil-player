@@ -13,9 +13,10 @@ import {
 	SMILAudio,
 	SMILWidget, PlaylistElement,
 } from '../../../models';
-import { ObjectFitEnum, SMILScheduleEnum, XmlTags } from '../../../enums';
+import { ObjectFitEnum, SMILScheduleEnum, XmlTags, SMILEnums } from '../../../enums';
 import moment from 'moment';
 import { getFileName } from '../../files/tools';
+import { parseNestedRegions }  from '../../xmlParser/tools';
 
 export const debug = Debug('@signageos/smil-player:playlistModule');
 
@@ -140,6 +141,10 @@ export function getRegionInfo(regionObject: RegionsObject, regionName: string): 
 	}
 
 	regionInfo = fixVideoDimension(regionInfo);
+	// fix nested regions and its values for dynamic use
+	if (regionInfo.hasOwnProperty(SMILEnums.region)) {
+		parseNestedRegions(regionInfo);
+	}
 	debug('Getting region info: %O for region name: %s', regionInfo, regionName);
 	regionInfo = {
 		...regionInfo,

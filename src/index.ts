@@ -71,6 +71,11 @@ async function main(internalStorageUnit: IStorageUnit, smilUrl: string, thisSos:
 		await playlist.manageFilesAndInfo(smilObject, internalStorageUnit, smilUrl);
 	}
 
+	await playlist.getAllInfo(smilObject.triggers, smilObject, internalStorageUnit);
+	debug('All triggers info extracted');
+
+	console.log(JSON.stringify(smilObject));
+
 	debug('Starting to process parsed smil file');
 	await playlist.processingLoop(internalStorageUnit, smilObject, smilFile);
 }
