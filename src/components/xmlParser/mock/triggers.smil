@@ -3,7 +3,8 @@
         <meta http-equiv="Refresh" content="90"/>
         <layout>
             <root-layout width="1920" height="1080" backgroundColor="#FFFFFF"/>
-            <region regionName="video" left="10" top="10" width="1280" height="720" z-index="1" backgroundColor="#FFFFFF"
+            <region regionName="video" left="10" top="10" width="1280" height="720" z-index="1"
+                    backgroundColor="#FFFFFF"
                     mediaAlign="topLeft">
                 <region regionName="video1" left="0" top="0" width="640" height="720" z-index="1"
                         backgroundColor="transparent"/>
@@ -71,7 +72,7 @@
                 <excl repeatCount="indefinite">
 
                     <priorityClass lower="never" peer="stop" higher="stop"> <!-- Tillagt 2 -->
-                        <par begin="wallclock(R/2011-01-01T07:00:00/P1D)" end="wallclock(R/2011-01-01T17:00:00/P1D)">
+                        <par begin="wallclock(R/2011-01-01T00:00:00/P1D)" end="wallclock(R/2011-01-01T23:00:00/P1D)">
                             <seq repeatCount="indefinite">
                                 <excl begin="0" repeatCount="indefinite">
                                     <priorityClass higher="stop" pauseDisplay="hide">
@@ -95,26 +96,13 @@
                                                 </seq>
                                             </par>
 
-
                                             <par>
-                                                <seq repeatCount="indefinite">
+                                                <seq repeatCount="1">
 
-                                                    <ref src="http://butikstv.centrumkanalen.com/play/render/widgets/ebbapettersson/top/top.wgt"
-                                                         type="application/widget" region="widget11" dur="60s">
+                                                    <video src="http://butikstv.centrumkanalen.com/play/media/rendered/filmer/9820.mp4"
+                                                           type="application/widget" region="video">
                                                         <param name="cacheControl" value="onlyIfCached"/>
-                                                    </ref>
-
-                                                </seq>
-                                            </par>
-
-
-                                            <par>
-                                                <seq repeatCount="indefinite">
-
-                                                    <ref src="http://butikstv.centrumkanalen.com/play/render/widgets/ebbapettersson/vasttrafik/vasttrafik_news.wgt"
-                                                         type="application/widget" region="widget12" dur="60s">
-                                                        <param name="cacheControl" value="onlyIfCached"/>
-                                                    </ref>
+                                                    </video>
 
                                                 </seq>
                                             </par>
@@ -143,26 +131,14 @@
                                                 </seq>
                                             </par>
 
-
-                                            <seq begin="trigger3">
-                                                <video src="http://butikstv.centrumkanalen.com/play/media/rendered/filmer/9820.mp4"
-                                                       id="annons0" fit="hidden" region="video">
-                                                    <param name="cacheControl" value="auto"/>
-                                                </video>
-                                                <video src="http://butikstv.centrumkanalen.com/play/media/filmer/likabehandlingsdag2020.mp4"
-                                                       id="annons1" fit="hidden" region="video">
-                                                    <param name="cacheControl" value="auto"/>
-                                                </video>
-                                                <video src="http://butikstv.centrumkanalen.com/play/media/filmer/untitled.mp4"
-                                                       id="annons2" fit="hidden" region="video">
-                                                    <param name="cacheControl" value="auto"/>
-                                                </video>
-                                                <img src="http://butikstv.centrumkanalen.com/play/media/rendered/bilder/10510.png"
-                                                     id="annons3" dur="40s" fit="hidden" region="video">
-                                                    <param name="cacheControl" value="auto"/>
-                                                </img>
-
-                                            </seq>
+                                            <par>
+                                                <seq begin="trigger3">
+                                                    <video src="http://butikstv.centrumkanalen.com/play/media/filmer/likabehandlingsdag2020.mp4"
+                                                           id="annons1" fit="hidden" region="video">
+                                                        <param name="cacheControl" value="auto"/>
+                                                    </video>
+                                                </seq>
+                                            </par>
 
                                         </par>
                                     </priorityClass>

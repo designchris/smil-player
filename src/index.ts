@@ -71,11 +71,6 @@ async function main(internalStorageUnit: IStorageUnit, smilUrl: string, thisSos:
 		await playlist.manageFilesAndInfo(smilObject, internalStorageUnit, smilUrl);
 	}
 
-	await playlist.getAllInfo(smilObject.triggers, smilObject, internalStorageUnit);
-	debug('All triggers info extracted');
-
-	console.log(JSON.stringify(smilObject));
-
 	debug('Starting to process parsed smil file');
 	await playlist.processingLoop(internalStorageUnit, smilObject, smilFile);
 }
@@ -119,6 +114,7 @@ async function startSmil(smilUrl: string) {
 const smilForm = <HTMLElement> document.getElementById('SMILUrlWrapper');
 smilForm.onsubmit = async function (event: Event) {
 	event.preventDefault();
+	Debug.enable('@signageos/smil-player:*');
 	const smilUrl = (<HTMLInputElement> document.getElementById('SMILUrl')).value;
 	debug('Smil file url is: %s', smilUrl);
 	await startSmil(smilUrl);

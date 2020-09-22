@@ -35,7 +35,7 @@ export type RegionAttributes = {
 	height: number,
 	"z-index"?: number,
 	fit?: string,
-	region: RegionAttributes,
+	region: RegionAttributes | RegionAttributes[],
 	[key: string]: any,
 };
 
@@ -49,6 +49,7 @@ export type SMILVideo = {
 	playing?: boolean,
 	regionInfo: RegionAttributes,
 	media?: string,
+	isTrigger?: boolean,
 };
 
 export type SMILAudio = {
@@ -59,6 +60,7 @@ export type SMILAudio = {
 	regionInfo: RegionAttributes,
 	localFilePath: string,
 	playing?: boolean,
+	isTrigger?: boolean,
 };
 
 export type SMILImage = {
@@ -70,6 +72,7 @@ export type SMILImage = {
 	regionInfo: RegionAttributes,
 	localFilePath: string,
 	playing?: boolean,
+	isTrigger?: boolean,
 };
 
 export type SMILWidget = {
@@ -81,6 +84,7 @@ export type SMILWidget = {
 	regionInfo: RegionAttributes,
 	localFilePath: string,
 	playing?: boolean,
+	isTrigger?: boolean,
 };
 
 export type SosHtmlElement = {
