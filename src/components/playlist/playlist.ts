@@ -564,7 +564,7 @@ export class Playlist {
 	}
 
 	public watchTriggers = async (smilObject: SMILFileObject) => {
-		await sleep(20000);
+		await sleep(12000);
 		const testingTrigger = 'trigger3';
 		console.log('startring trigger');
 		const triggerMedia = smilObject.triggers[testingTrigger];
@@ -574,12 +574,32 @@ export class Playlist {
 	private findFirstFreeRegion(regions: RegionAttributes[]): number {
 		let index = 0;
 		for (const region of regions) {
-			if (isNil(this.currentlyPlaying[region.regionName])) {
+			if (get(this.currentlyPlaying[region.regionName], 'playing', false) === false) {
 				return index;
 			}
 			index += 1;
 		}
 		return 0;
+	}
+
+	private isRegionOrNestedActive = async (regionInfo: RegionAttributes): Promise<boolean> => {
+		if (get(this.currentlyPlaying[regionInfo.regionName], 'playing') === true
+			&& get(this.currentlyPlaying[regionInfo.regionName], 'isTrigger') === true) {
+			return true;
+		}
+
+		for (const region of <RegionAttributes[]> regionInfo.region) {
+			if (get(this.currentlyPlaying[region.regionName], 'playing') === true) {
+				return true;
+			}
+			// if media has set playing to false, cancel it
+			if (get(this.currentlyPlaying[region.regionName], 'playing') === false) {
+				console.log(region);
+				await this.cancelPreviousMedia(region);
+			}
+
+		}
+		return false;
 	}
 
 	private setIntroUrl(introObject: object) {
@@ -625,6 +645,7 @@ export class Playlist {
 	 * @param regionName -  name of the region of current media
 	 */
 	private setCurrentlyPlaying = (element: SMILVideo | SosHtmlElement, tag: string, regionName: string) => {
+		console.log('setting video to region ' + regionName);
 		this.currentlyPlaying[regionName] = element;
 		this.currentlyPlaying[regionName].media = tag;
 		this.currentlyPlaying[regionName].playing = true;
@@ -637,12 +658,21 @@ export class Playlist {
 	private cancelPreviousVideo = async (regionInfo: RegionAttributes) => {
 		debug('previous video playing: %O', this.currentlyPlaying[regionInfo.regionName]);
 		const video = <SMILVideo> this.currentlyPlaying[regionInfo.regionName];
+		let localRegionInfo = video.regionInfo;
+		// cancelling trigger, have to find correct nested region
+		if (localRegionInfo.regionName !== regionInfo.regionName) {
+			localRegionInfo.region.forEach((nestedRegion: RegionAttributes) => {
+				if (nestedRegion.regionName === regionInfo.regionName) {
+					localRegionInfo = nestedRegion;
+				}
+			});
+		}
 		await this.sos.video.stop(
 			video.localFilePath,
-			video.regionInfo.left,
-			video.regionInfo.top,
-			video.regionInfo.width,
-			video.regionInfo.height,
+			localRegionInfo.left,
+			localRegionInfo.top,
+			localRegionInfo.width,
+			localRegionInfo.height,
 		);
 		video.playing = false;
 		debug('previous video stopped');
@@ -818,6 +848,15 @@ export class Playlist {
 	private playVideo = async (video: SMILVideo) => {
 		debug('Playing video: %O', video);
 		let regionInfo, parentRegion = regionInfo = video.regionInfo;
+
+		console.log(!video.isTrigger);
+		console.log(await this.isRegionOrNestedActive(regionInfo));
+		if (!video.isTrigger && await this.isRegionOrNestedActive(regionInfo)) {
+			debug('Cant play video because its region is occupied by trigger. video: %O, region: %O', video, regionInfo);
+			await sleep(1000);
+			return;
+		}
+
 		if (video.isTrigger && regionInfo.hasOwnProperty('region')) {
 			if (!Array.isArray(regionInfo.region)) {
 				regionInfo.region = [regionInfo.region];
@@ -853,6 +892,7 @@ export class Playlist {
 
 		this.setCurrentlyPlaying(video, 'video', regionInfo.regionName);
 
+		console.log('playing video ' + video.localFilePath);
 		await this.sos.video.play(
 			video.localFilePath,
 			regionInfo.left,
@@ -861,14 +901,22 @@ export class Playlist {
 			regionInfo.height,
 		);
 
-		await this.sos.video.onceEnded(
-			video.localFilePath,
-			regionInfo.left,
-			regionInfo.top,
-			regionInfo.width,
-			regionInfo.height,
-		);
-		debug('Playing video finished: %O', video);
+		try {
+			await this.sos.video.onceEnded(
+				video.localFilePath,
+				regionInfo.left,
+				regionInfo.top,
+				regionInfo.width,
+				regionInfo.height,
+			);
+			debug('Playing video finished: %O', video);
+		} catch (err) {
+			console.log('error ty vole');
+			console.log(err);
+		}
+
+		video.playing = false;
+		console.log(this.currentlyPlaying[regionInfo.regionName]);
 
 		// no video.stop function so one video can be played gapless in infinite loop
 		// stopping is handled by cancelPreviousMedia function

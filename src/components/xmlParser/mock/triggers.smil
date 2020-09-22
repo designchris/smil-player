@@ -99,7 +99,7 @@
                                             <par>
                                                 <seq repeatCount="1">
 
-                                                    <video src="http://butikstv.centrumkanalen.com/play/media/rendered/filmer/9820.mp4"
+                                                    <video src="https://signageos-demo.s3.eu-central-1.amazonaws.com/smil/zones/files/video_1.mp4"
                                                            type="application/widget" region="video">
                                                         <param name="cacheControl" value="onlyIfCached"/>
                                                     </video>
@@ -133,7 +133,7 @@
 
                                             <par>
                                                 <seq begin="trigger3">
-                                                    <video src="http://butikstv.centrumkanalen.com/play/media/filmer/likabehandlingsdag2020.mp4"
+                                                    <video src="https://signageos-demo.s3.eu-central-1.amazonaws.com/smil/zones/files/video_2.mp4"
                                                            id="annons1" fit="hidden" region="video">
                                                         <param name="cacheControl" value="auto"/>
                                                     </video>
