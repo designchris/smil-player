@@ -148,6 +148,6 @@ function extractRegionInfo(xmlObject: RegionsObject): RegionsObject {
 
 export async function processSmil(xmlFile: string): Promise<SMILFileObject> {
 	const smilObject = await parseXml(xmlFile);
-	console.log(JSON.stringify(smilObject));
+	// console.log(JSON.stringify(smilObject));
 	return smilObject;
 }

@@ -115,6 +115,7 @@ const smilForm = <HTMLElement> document.getElementById('SMILUrlWrapper');
 smilForm.onsubmit = async function (event: Event) {
 	event.preventDefault();
 	Debug.enable('@signageos/smil-player:*');
+	// Debug.disable();
 	const smilUrl = (<HTMLInputElement> document.getElementById('SMILUrl')).value;
 	debug('Smil file url is: %s', smilUrl);
 	await startSmil(smilUrl);

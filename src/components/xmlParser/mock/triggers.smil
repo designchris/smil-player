@@ -8,7 +8,7 @@
                     mediaAlign="topLeft">
                 <region regionName="video1" left="0" top="0" width="640" height="720" z-index="1"
                         backgroundColor="transparent"/>
-                <region regionName="video2" left="10%" top="10%" width="640" height="720" z-index="1"
+                <region regionName="video2" left="640" top="0" width="640" height="720" z-index="1"
                         backgroundColor="transparent"/>
             </region>
 
@@ -99,7 +99,11 @@
                                             <par>
                                                 <seq repeatCount="1">
 
-                                                    <video src="https://signageos-demo.s3.eu-central-1.amazonaws.com/smil/zones/files/video_1.mp4"
+                                                    <video src="https://signageos-demo.s3.eu-central-1.amazonaws.com/smil/samples/assets/landscape1.mp4"
+                                                           type="application/widget" region="video">
+                                                        <param name="cacheControl" value="onlyIfCached"/>
+                                                    </video>
+                                                    <video src="https://signageos-demo.s3.eu-central-1.amazonaws.com/smil/samples/assets/landscape1.mp4"
                                                            type="application/widget" region="video">
                                                         <param name="cacheControl" value="onlyIfCached"/>
                                                     </video>
@@ -122,18 +126,24 @@
 
                                             <par>
                                                 <seq begin="trigger2">
-
-                                                    <img src="http://butikstv.centrumkanalen.com/play/media/rendered/bilder/ebbaical.png"
-                                                         region="widget14" dur="60s">
-                                                        <param name="cacheControl" value="onlyIfCached"/>
-                                                    </img>
-
+                                                    <video src="https://signageos-demo.s3.eu-central-1.amazonaws.com/smil/zones/files/video_3.mp4"
+                                                           id="annons1" fit="hidden" region="video">
+                                                        <param name="cacheControl" value="auto"/>
+                                                    </video>
+                                                    <video src="https://signageos-demo.s3.eu-central-1.amazonaws.com/smil/zones/files/video_3.mp4"
+                                                           id="annons1" fit="hidden" region="video">
+                                                        <param name="cacheControl" value="auto"/>
+                                                    </video>
                                                 </seq>
                                             </par>
 
                                             <par>
                                                 <seq begin="trigger3">
-                                                    <video src="https://signageos-demo.s3.eu-central-1.amazonaws.com/smil/zones/files/video_2.mp4"
+                                                    <video src="https://signageos-demo.s3.eu-central-1.amazonaws.com/smil/zones/files/video_3.mp4"
+                                                           id="annons1" fit="hidden" region="video">
+                                                        <param name="cacheControl" value="auto"/>
+                                                    </video>
+                                                    <video src="https://signageos-demo.s3.eu-central-1.amazonaws.com/smil/samples/assets/landscape2.mp4"
                                                            id="annons1" fit="hidden" region="video">
                                                         <param name="cacheControl" value="auto"/>
                                                     </video>

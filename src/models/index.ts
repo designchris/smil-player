@@ -166,8 +166,12 @@ export type PlaylistElement = {
 };
 
 export type CurrentlyPlaying = {
-	[regionName: string]: SosHtmlElement | SMILVideo,
+	[regionName: string]: PlayingInfo,
 };
+
+export type PlayingInfo = {
+	player?: string,
+} & SosHtmlElement & SMILVideo;
 
 export type SMILFileObject = SMILPlaylist & RegionsObject & DownloadsList & TriggerList;
 
