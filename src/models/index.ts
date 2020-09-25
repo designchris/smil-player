@@ -50,6 +50,7 @@ export type SMILVideo = {
 	regionInfo: RegionAttributes,
 	media?: string,
 	isTrigger?: boolean,
+	triggerValue?: string,
 };
 
 export type SMILAudio = {
@@ -61,6 +62,7 @@ export type SMILAudio = {
 	localFilePath: string,
 	playing?: boolean,
 	isTrigger?: boolean,
+	triggerValue?: string,
 };
 
 export type SMILImage = {
@@ -73,6 +75,7 @@ export type SMILImage = {
 	localFilePath: string,
 	playing?: boolean,
 	isTrigger?: boolean,
+	triggerValue?: string,
 };
 
 export type SMILWidget = {
@@ -85,6 +88,7 @@ export type SMILWidget = {
 	localFilePath: string,
 	playing?: boolean,
 	isTrigger?: boolean,
+	triggerValue?: string,
 };
 
 export type SosHtmlElement = {
@@ -92,6 +96,8 @@ export type SosHtmlElement = {
 	id: string,
 	media?: string,
 	playing?: boolean,
+	isTrigger?: boolean,
+	triggerValue?: string,
 };
 
 export type SMILIntro = {

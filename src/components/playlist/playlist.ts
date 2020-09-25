@@ -95,13 +95,14 @@ export class Playlist {
 		await this.getAllInfo(smilObject.triggers, smilObject, internalStorageUnit, true);
 		debug('All triggers info extracted');
 
-		// console.log(JSON.stringify(smilObject));
+		console.log(JSON.stringify(smilObject));
 	}
 
 	/**
 	 * plays intro media before actual playlist starts, default behaviour is to play video as intro
 	 * @param smilObject - JSON representation of parsed smil file
 	 * @param internalStorageUnit - persistent storage unit
+	 * @param smilUrl - url of the actual smil file
 	 */
 	public playIntro = async (smilObject: SMILFileObject, internalStorageUnit: IStorageUnit, smilUrl: string): Promise<void> => {
 		let media: string = 'video';
@@ -248,7 +249,9 @@ export class Playlist {
 		let widgetRootFile: string = '';
 		let fileStructure: string = '';
 		let htmlElement: string = '';
+		let triggerName: string = '';
 		for (let [key, loopValue] of Object.entries(playlist)) {
+			triggerName = key === 'begin' && loopValue.startsWith(SMILEnums.triggerFormat) ? loopValue : triggerName;
 			// skip processing string values like "repeatCount": "indefinite"
 			if (!isObject(loopValue)) {
 				continue;
@@ -299,6 +302,7 @@ export class Playlist {
 						// element will be played only on trigger emit in nested region
 						if (isTrigger) {
 							elem.isTrigger = true;
+							elem.triggerValue = triggerName;
 						}
 					}
 				}
@@ -600,13 +604,26 @@ export class Playlist {
 	}
 
 	public cancelTrigger = async() => {
-		await sleep(23000);
+		await sleep(11000);
 		console.log('cancelling trigger');
 		const testingTrigger = 'trigger3';
 		this.triggersEndless[testingTrigger] = false;
+		console.log(JSON.stringify(this.currentlyPlaying));
 		// @ts-ignore
-		const regionInfo = this.currentlyPlaying.video1.regionInfo.region[0];
+		// const regionInfo = this.currentlyPlaying.video1.regionInfo.region[0];
+		// TODO: v playvideo a podobnejch pridat do trigger endless vybrany info
+		//  na zaklade triggeru a tady sit o vytahnout, rozsirit objekt o regionInfo a endlessPLay
+		const regionInfo = {
+			"regionName": "video1",
+			"left": 10,
+			"top": 10,
+			"width": 640,
+			"height": 720,
+			"z-index": "1",
+			"backgroundColor": "transparent",
+		};
 		console.log(JSON.stringify(regionInfo));
+		// @ts-ignore
 		await this.cancelPreviousMedia(regionInfo);
 	}
 
@@ -739,9 +756,10 @@ export class Playlist {
 	 * @param filepath - local folder structure where file is stored
 	 * @param regionInfo - information about regio	n when current media belongs to
 	 * @param duration - how long should media stay on screen
+	 * @param isTrigger
 	 */
 	private playTimedMedia = async (
-		filepath: string, regionInfo: RegionAttributes, duration: string,
+		filepath: string, regionInfo: RegionAttributes, duration: string, isTrigger: boolean = false,
 	) => {
 		return new Promise(async (resolve) => {
 			let element = <HTMLElement> document.getElementById(generateElementId(filepath, regionInfo.regionName));
@@ -751,14 +769,41 @@ export class Playlist {
 			if (element.getAttribute('src') === null) {
 				element.setAttribute('src', filepath);
 			}
+
+			let localRegionInfo, parentRegion = localRegionInfo = regionInfo;
+
+			// console.log(!video.isTrigger);
+			// console.log(await this.isRegionOrNestedActive(regionInfo));
+			while (await this.isRegionOrNestedActive(localRegionInfo) && !isTrigger) {
+				debug('Cant play html element because its region is occupied by trigger. element: %s, region: %O', filepath, localRegionInfo);
+				await sleep(5000);
+			}
+
+			if (isTrigger && localRegionInfo.hasOwnProperty('region')) {
+				if (!Array.isArray(localRegionInfo.region)) {
+					localRegionInfo.region = [localRegionInfo.region];
+				}
+				// find first free region in nested regions, if none is free, take first one
+				localRegionInfo = localRegionInfo.region[this.findFirstFreeRegion(localRegionInfo.region)];
+			}
+
+			// new coordinates for new region
+			if (isTrigger) {
+				element.style.width = `${localRegionInfo.width}px`;
+				element.style.height = `${localRegionInfo.height}px`;
+				element.style.top = `${localRegionInfo.top}px`;
+				element.style.left = `${localRegionInfo.left}px`;
+			}
+
 			element.style.display = 'block';
 
 			const sosHtmlElement: SosHtmlElement = {
 				src: <string> element.getAttribute('src'),
 				id: element.id,
+				isTrigger,
 			};
 
-			await this.waitMediaOnScreen(regionInfo, parsedDuration, sosHtmlElement);
+			await this.waitMediaOnScreen(localRegionInfo, parentRegion, parsedDuration, sosHtmlElement);
 			resolve();
 		});
 	}
@@ -766,15 +811,25 @@ export class Playlist {
 	/**
 	 * pauses function execution for given duration time =  how long should media stay visible on the screen
 	 * @param regionInfo - information about region when current media belongs to
+	 * @param parentRegion
 	 * @param duration - how long should media stay on screen
 	 * @param element - displayed HTML element
 	 */
-	private waitMediaOnScreen = async (regionInfo: RegionAttributes, duration: number, element: SosHtmlElement) => {
+	private waitMediaOnScreen = async (
+		regionInfo: RegionAttributes, parentRegion: RegionAttributes, duration: number, element: SosHtmlElement,
+		) => {
 		// set invisible previous element in region for gapless playback if it differs from current element
 		if (get(this.currentlyPlaying[regionInfo.regionName], 'playing')
 			&& this.currentlyPlaying[regionInfo.regionName].src !== element.src) {
 			debug('cancelling media: %s from image: %s', this.currentlyPlaying[regionInfo.regionName].src, element.id);
 			await this.cancelPreviousMedia(regionInfo);
+		}
+
+		// cancel if video is not same as previous one played in the parent region ( triggers case )
+		if (get(this.currentlyPlaying[parentRegion.regionName], 'playing')
+			&& get(this.currentlyPlaying[parentRegion.regionName], 'src') !== element.src) {
+			console.log('cancelling from parent region');
+			await this.cancelPreviousMedia(parentRegion);
 		}
 
 		this.setCurrentlyPlaying(element, 'html', regionInfo.regionName);
@@ -1112,14 +1167,14 @@ export class Playlist {
 				if (isUrl(elem.src)) {
 					// widget with website url as datasource
 					if (htmlElement === 'iframe' && getFileName(elem.src).indexOf('.wgt') === -1) {
-						await this.playTimedMedia(elem.src, elem.regionInfo, elem.dur);
+						await this.playTimedMedia(elem.src, elem.regionInfo, elem.dur, elem.isTrigger);
 						continue;
 					}
 					if (htmlElement === 'audio') {
 						await this.playAudio(elem.localFilePath);
 						continue;
 					}
-					await this.playTimedMedia(elem.localFilePath, elem.regionInfo, elem.dur);
+					await this.playTimedMedia(elem.localFilePath, elem.regionInfo, elem.dur, elem.isTrigger);
 				}
 			}
 		}
@@ -1130,7 +1185,7 @@ export class Playlist {
 				// widget with website url as datasource
 				if (htmlElement === 'iframe' && getFileName(elem.src).indexOf('.wgt') === -1) {
 					promises.push((async () => {
-						await this.playTimedMedia(elem.src, elem.regionInfo, elem.dur);
+						await this.playTimedMedia(elem.src, elem.regionInfo, elem.dur, elem.isTrigger);
 					})());
 					continue;
 				}
@@ -1139,7 +1194,7 @@ export class Playlist {
 						await this.playAudio(elem.localFilePath);
 						return;
 					}
-					await this.playTimedMedia(elem.localFilePath, elem.regionInfo, elem.dur);
+					await this.playTimedMedia(elem.localFilePath, elem.regionInfo, elem.dur, elem.isTrigger);
 				})());
 			}
 			await Promise.all(promises);
