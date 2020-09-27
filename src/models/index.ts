@@ -49,7 +49,6 @@ export type SMILVideo = {
 	playing?: boolean,
 	regionInfo: RegionAttributes,
 	media?: string,
-	isTrigger?: boolean,
 	triggerValue?: string,
 };
 
@@ -61,7 +60,6 @@ export type SMILAudio = {
 	regionInfo: RegionAttributes,
 	localFilePath: string,
 	playing?: boolean,
-	isTrigger?: boolean,
 	triggerValue?: string,
 };
 
@@ -74,7 +72,6 @@ export type SMILImage = {
 	regionInfo: RegionAttributes,
 	localFilePath: string,
 	playing?: boolean,
-	isTrigger?: boolean,
 	triggerValue?: string,
 };
 
@@ -87,7 +84,6 @@ export type SMILWidget = {
 	regionInfo: RegionAttributes,
 	localFilePath: string,
 	playing?: boolean,
-	isTrigger?: boolean,
 	triggerValue?: string,
 };
 

@@ -102,6 +102,11 @@
                                                          region="video" dur="5s">
                                                         <param name="cacheControl" value="onlyIfCached"/>
                                                     </img>
+                                                    <img src="https://signageos-demo.s3.eu-central-1.amazonaws.com/smil/zones/files/img_4.jpg"
+                                                         region="video" dur="5s">
+                                                        <param name="cacheControl" value="onlyIfCached"/>
+                                                    </img>
+
 
                                                 </seq>
                                             </par>
@@ -125,6 +130,11 @@
                                                          region="video" dur="5s">
                                                         <param name="cacheControl" value="onlyIfCached"/>
                                                     </img>
+                                                    <img src="https://signageos-demo.s3.eu-central-1.amazonaws.com/smil/zones/files/img_5.jpg"
+                                                         region="video" dur="5s">
+                                                        <param name="cacheControl" value="onlyIfCached"/>
+                                                    </img>
+
 
                                                 </seq>
                                             </par>
@@ -132,6 +142,10 @@
                                             <par>
                                                 <seq begin="trigger3">
                                                     <img src="https://signageos-demo.s3.eu-central-1.amazonaws.com/smil/zones/files/img_3.jpg"
+                                                         region="video" dur="5s">
+                                                        <param name="cacheControl" value="onlyIfCached"/>
+                                                    </img>
+                                                    <img src="https://signageos-demo.s3.eu-central-1.amazonaws.com/smil/zones/files/img_6.jpg"
                                                          region="video" dur="5s">
                                                         <param name="cacheControl" value="onlyIfCached"/>
                                                     </img>

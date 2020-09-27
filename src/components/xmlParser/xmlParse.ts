@@ -1,7 +1,6 @@
 import * as xml2js from 'xml2js';
 // @ts-ignore
 import { JefNode } from 'json-easy-filter';
-import { DOMParser } from 'xmldom';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
 import {
@@ -30,9 +29,8 @@ async function parseXml(xmlFile: string): Promise<SMILFileObject> {
 	const triggerList: TriggerList = {
 		triggers: {},
 	};
-	const xmlFileSerialized: Document = new DOMParser().parseFromString(xmlFile, "text/xml");
-	debug('Xml string serialized : %O', xmlFileSerialized);
-	const xmlObject: XmlSmilObject = await xml2js.parseStringPromise(xmlFileSerialized, {
+	debug('Xml string serialized : %O', xmlFile);
+	const xmlObject: XmlSmilObject = await xml2js.parseStringPromise(xmlFile, {
 		mergeAttrs: true,
 		explicitArray: false,
 	});
