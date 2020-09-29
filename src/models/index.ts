@@ -18,13 +18,17 @@ export type RootLayout = {
 export type XmlSmilObject = {
 	smil: {
 		head: {
-			meta: {
-				content: string,
-			}
+			meta: XmlMetaObject | XmlMetaObject[],
 			layout: RegionsObject,
 		},
 		body: object,
 	},
+};
+
+export type XmlMetaObject = {
+	content: string,
+	trigger?: string,
+	rfid?: string,
 };
 
 export type RegionAttributes = {
@@ -114,12 +118,17 @@ export type DownloadsList = {
 };
 
 export type TriggerList = {
+	triggerRfid: TriggerRfidPairing,
 	triggers: { [key: string]: TriggerObject },
 };
 
 export type TriggerObject = {
 	begin: string,
 	[key: string]: SMILVideo[] | SMILImage[] | SMILWidget[] | SMILAudio[] | SMILIntro[] | string,
+};
+
+export type TriggerRfidPairing = {
+	[key: string]: string,
 };
 
 export type CheckETagFunctions = {

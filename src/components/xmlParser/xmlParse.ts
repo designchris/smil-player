@@ -9,8 +9,7 @@ import {
 	RootLayout,
 	DownloadsList,
 	SMILFileObject,
-	SMILPlaylist,
-	XmlSmilObject, SMILMediaSingle, TriggerList,
+	XmlSmilObject, SMILMediaSingle, TriggerList, XmlMetaObject, SMILPlaylist,
 } from '../../models';
 import { SMILEnums, XmlTags } from '../../enums';
 import { debug, containsElement } from './tools';
@@ -27,6 +26,7 @@ async function parseXml(xmlFile: string): Promise<SMILFileObject> {
 		playlist: {},
 	};
 	const triggerList: TriggerList = {
+		triggerRfid: {},
 		triggers: {},
 	};
 	debug('Xml string serialized : %O', xmlFile);
@@ -38,7 +38,11 @@ async function parseXml(xmlFile: string): Promise<SMILFileObject> {
 	debug('Xml file parsed to json object: %O', xmlObject);
 
 	const regions = <RegionsObject> extractRegionInfo(xmlObject.smil.head.layout);
-	regions.refresh = parseInt(xmlObject.smil.head.meta.content) || SMILEnums.defaultRefresh;
+
+	if (!Array.isArray(xmlObject.smil.head.meta)) {
+		xmlObject.smil.head.meta = [xmlObject.smil.head.meta];
+	}
+	parseMetaInfo(xmlObject.smil.head.meta, regions, triggerList);
 	playableMedia.playlist = <SMILPlaylist> xmlObject.smil.body;
 
 	// traverse json as tree of nodes
@@ -77,6 +81,22 @@ async function parseXml(xmlFile: string): Promise<SMILFileObject> {
 	debug('Extracted downloads object: %O', downloads);
 
 	return Object.assign({}, regions, playableMedia, downloads, triggerList);
+}
+
+function parseMetaInfo(metaObjects: XmlMetaObject[], regions: RegionsObject, triggerList: TriggerList) {
+	for (const meta of metaObjects) {
+		if (meta.hasOwnProperty(SMILEnums.metaContent)) {
+			regions.refresh = parseInt(meta.content) || SMILEnums.defaultRefresh;
+		}
+
+		if (meta.hasOwnProperty(SMILEnums.metaTrigger)) {
+			if (meta.hasOwnProperty(SMILEnums.metaRfid)) {
+				triggerList.triggerRfid[meta.rfid!] = meta.trigger!;
+			} else {
+				debug('Meta trigger record does not have rfid pairing');
+			}
+		}
+	}
 }
 
 function extractRegionInfo(xmlObject: RegionsObject): RegionsObject {
@@ -146,6 +166,6 @@ function extractRegionInfo(xmlObject: RegionsObject): RegionsObject {
 
 export async function processSmil(xmlFile: string): Promise<SMILFileObject> {
 	const smilObject = await parseXml(xmlFile);
-	// console.log(JSON.stringify(smilObject));
+	console.log(JSON.stringify(smilObject));
 	return smilObject;
 }

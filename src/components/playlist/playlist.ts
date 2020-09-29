@@ -581,7 +581,7 @@ export class Playlist {
 
 	public watchTriggers = async(smilObject: SMILFileObject) => {
 		await sleep(3000);
-		const testingTrigger = 'trigger3';
+		const testingTrigger = smilObject.triggerRfid[3];
 		console.log('startring trigger');
 		const triggerMedia = smilObject.triggers[testingTrigger];
 		console.log(JSON.stringify(triggerMedia));
@@ -594,7 +594,7 @@ export class Playlist {
 
 	public watchTriggers2 = async(smilObject: SMILFileObject) => {
 		await sleep(8000);
-		const testingTrigger = 'trigger2';
+		const testingTrigger = smilObject.triggerRfid[2];
 		console.log('startring trigger2');
 		const triggerMedia = smilObject.triggers[testingTrigger];
 		set(this.triggersEndless, `${testingTrigger}.play`, true);
@@ -846,7 +846,6 @@ export class Playlist {
 	 */
 	private playVideosSeq = async (videos: SMILVideo[]) => {
 		console.log('video SEQ called');
-		// @ts-ignore
 		let regionInfo, parentRegion = regionInfo = videos[0].regionInfo;
 
 		// console.log(!video.isTrigger);

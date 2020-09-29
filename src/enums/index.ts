@@ -4,6 +4,9 @@ export enum SMILEnums {
 	defaultRefresh = 20,
 	defaultDownloadRetry = 60,
 	triggerFormat = 'trigger',
+	metaContent = 'content',
+	metaTrigger = 'trigger',
+	metaRfid = 'rfid',
 }
 
 export enum FileStructure {

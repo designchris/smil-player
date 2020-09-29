@@ -1,6 +1,9 @@
 <smil>
     <head>
         <meta http-equiv="Refresh" content="90"/>
+        <meta trigger="trigger" rfid="1"/>
+        <meta trigger="trigger2" rfid="2"/>
+        <meta trigger="trigger3" rfid="3"/>
         <layout>
             <root-layout width="1920" height="1080" backgroundColor="#FFFFFF"/>
             <region regionName="video" left="10" top="10" width="1280" height="720" z-index="1"

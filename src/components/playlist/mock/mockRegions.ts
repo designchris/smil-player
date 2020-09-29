@@ -18,8 +18,8 @@ export const mockParsedNestedRegion = {
 	},
 	{
 		regionName: "video2",
-		left: 138,
-		top: 82,
+		left: 650,
+		top: 10,
 		width: 640,
 		height: 720,
 		"z-index": "1",

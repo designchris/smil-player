@@ -264,6 +264,8 @@ export const mockSMILFileParsedRegionAlias = {
 			],
 		},
 	},
+	triggerRfid: {},
+	triggers: {},
 	video: [
 		{
 			src: "http://butikstv.centrumkanalen.com/play/media/ladd/portrait.mp4",
