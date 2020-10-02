@@ -222,11 +222,11 @@ export class Playlist {
 					console.log('after trigger');
 					callback();
 				},
-				// async (callback) => {
-				// 	// triggers processing
-				// 	await this.watchTriggers2(smilObject);
-				// 	callback();
-				// },
+				async (callback) => {
+					// triggers processing
+					await this.watchTriggers2(smilObject);
+					callback();
+				},
 				async (callback) => {
 					// triggers cancel
 					await this.cancelTrigger();
@@ -679,7 +679,7 @@ export class Playlist {
 	}
 
 	public watchTriggers2 = async(smilObject: SMILFileObject) => {
-		await sleep(8000);
+		await sleep(3000);
 		const testingTrigger = smilObject.triggerRfid[2];
 		console.log('startring trigger2');
 		const triggerMedia = smilObject.triggers[testingTrigger];
