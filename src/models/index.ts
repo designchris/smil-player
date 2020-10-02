@@ -29,6 +29,7 @@ export type XmlMetaObject = {
 	content: string,
 	trigger?: string,
 	rfid?: string,
+	antennaPorts?: string,
 };
 
 export type RegionAttributes = {
@@ -118,6 +119,7 @@ export type DownloadsList = {
 };
 
 export type TriggerList = {
+	antennaPorts: string[],
 	triggerRfid: TriggerRfidPairing,
 	triggers: { [key: string]: TriggerObject },
 };
@@ -146,6 +148,7 @@ export type SMILFile = {
 };
 
 export type SosModule = {
+	hardware: any;
 	fileSystem: any,
 	video: any,
 

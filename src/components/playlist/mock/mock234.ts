@@ -266,6 +266,7 @@ export const mockSMILFileParsed234 = {
 	},
 	triggerRfid: {},
 	triggers: {},
+	antennaPorts: [],
 	video: [
 		{
 			src: "http://butikstv.centrumkanalen.com/play/media/ladd/portrait.mp4",

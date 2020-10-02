@@ -169,6 +169,13 @@ export const mockSMILFileTriggers = {
 		param: {name: "cacheControl", value: "onlyIfCached"},
 	}],
 	ref: [],
+	antennaPorts: [
+		"1",
+		"2",
+		"3",
+		"4",
+		"5",
+	],
 	audio: [],
 	intro: [{
 		repeatCount: "indefinite",

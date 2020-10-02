@@ -285,6 +285,7 @@ export const mockSMILFileParsed99 = {
 	},
 	triggerRfid: {},
 	triggers: {},
+	antennaPorts: [],
 	video: [
 		{
 			src: "http://butikstv.centrumkanalen.com/play/media/ladd/landscape.mp4",

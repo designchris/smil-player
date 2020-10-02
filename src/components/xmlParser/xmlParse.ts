@@ -26,6 +26,7 @@ async function parseXml(xmlFile: string): Promise<SMILFileObject> {
 		playlist: {},
 	};
 	const triggerList: TriggerList = {
+		antennaPorts: [],
 		triggerRfid: {},
 		triggers: {},
 	};
@@ -87,6 +88,10 @@ function parseMetaInfo(metaObjects: XmlMetaObject[], regions: RegionsObject, tri
 	for (const meta of metaObjects) {
 		if (meta.hasOwnProperty(SMILEnums.metaContent)) {
 			regions.refresh = parseInt(meta.content) || SMILEnums.defaultRefresh;
+		}
+
+		if (meta.hasOwnProperty(SMILEnums.metaAntena)) {
+			triggerList.antennaPorts = meta.antennaPorts!.split(',');
 		}
 
 		if (meta.hasOwnProperty(SMILEnums.metaTrigger)) {

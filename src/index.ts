@@ -104,6 +104,8 @@ async function startSmil(smilUrl: string) {
 (async() => {
 	await sos.onReady();
 	if (sos.config.smilUrl) {
+		Debug.enable('@signageos/smil-player:*');
+		// Debug.disable();
 		debug('sOS is ready');
 		debug('Smil file url is: %s', sos.config.smilUrl);
 		await startSmil(sos.config.smilUrl);

@@ -5,6 +5,8 @@ import get = require('lodash/get');
 import set = require('lodash/set');
 import { isEqual } from "lodash";
 import { parallel } from 'async';
+// @ts-ignore
+import Nexmosphere from '@signageos/front-applet-extension-nexmosphere/es6';
 import {
 	RegionAttributes,
 	RegionsObject,
@@ -30,6 +32,8 @@ import {
 	generateElementId, createDomElement,
 } from './tools';
 import { Files } from '../files/files';
+// @ts-ignore
+import { RfidAntennaEvent } from "@signageos/front-applet/es6/Sensors/IRfidAntenna";
 const isUrl = require('is-url-superb');
 
 // @ts-ignore
@@ -157,7 +161,7 @@ export class Playlist {
 				}
 				// all files are downloaded, stop intro
 				debug('SMIL media files download finished, stopping intro');
-				return playingIntro = false;
+				playingIntro = false;
 			});
 		}
 
@@ -215,13 +219,14 @@ export class Playlist {
 				async (callback) => {
 					// triggers processing
 					await this.watchTriggers(smilObject);
+					console.log('after trigger');
 					callback();
 				},
-				async (callback) => {
-					// triggers processing
-					await this.watchTriggers2(smilObject);
-					callback();
-				},
+				// async (callback) => {
+				// 	// triggers processing
+				// 	await this.watchTriggers2(smilObject);
+				// 	callback();
+				// },
 				async (callback) => {
 					// triggers cancel
 					await this.cancelTrigger();
@@ -581,7 +586,7 @@ export class Playlist {
 
 	public watchTriggers = async(smilObject: SMILFileObject) => {
 		await sleep(3000);
-		const testingTrigger = smilObject.triggerRfid[3];
+		const testingTrigger = smilObject.triggerRfid[1];
 		console.log('startring trigger');
 		const triggerMedia = smilObject.triggers[testingTrigger];
 		console.log(JSON.stringify(triggerMedia));
@@ -590,6 +595,87 @@ export class Playlist {
 			console.log('playing trigger');
 			await this.processPlaylist(triggerMedia);
 		}
+		// const serialPort = await this.sos.hardware.openSerialPort({
+		// 	device: '/dev/ttyUSB0',
+		// 	baudRate: 115200,
+		// });
+		//
+		// const nexmosphere = new Nexmosphere(serialPort);
+		// // const antennaArray = [];
+		// //
+		// // for (const port of smilObject.antennaPorts) {
+		// // 	antennaArray.push(nexmosphere.createRfidAntenna(parseInt(port)));
+		// // 	antennaArray[antennaArray.length - 1].on(RfidAntennaEvent.PICKED, async (tag: number) => {
+		// // 		console.log(`${tag} picked antena 3`);
+		// // 		const testingTrigger = smilObject.triggerRfid[tag];
+		// // 		console.log('startring trigger');
+		// // 		const triggerMedia = smilObject.triggers[testingTrigger];
+		// // 		console.log(JSON.stringify(triggerMedia));
+		// // 		set(this.triggersEndless, `${testingTrigger}.play`, true);
+		// // 		while (this.triggersEndless[testingTrigger].play) {
+		// // 			console.log('playing trigger');
+		// // 			await this.processPlaylist(triggerMedia);
+		// // 		}
+		// // 	});
+		// //
+		// // 	antennaArray[antennaArray.length - 1].on(RfidAntennaEvent.PLACED, async (tag: number) => {
+		// // 		console.log(`${tag} placed antena 3`);
+		// // 		console.log('cancelling trigger');
+		// // 		const testingTrigger = smilObject.triggerRfid[tag];
+		// // 		set(this.triggersEndless, `${testingTrigger}.play`, false);
+		// // 		const regionInfo = this.triggersEndless[testingTrigger].regionInfo;
+		// // 		// @ts-ignore
+		// // 		await this.cancelPreviousMedia(regionInfo);
+		// // 	});
+		// // }
+		//
+		// const rfidAntenna1 = nexmosphere.createRfidAntenna(3);
+		// rfidAntenna1.on(RfidAntennaEvent.PICKED, async (tag: number) => {
+		// 	console.log(`${tag} picked antena 3`);
+		// 	const testingTrigger = smilObject.triggerRfid[tag];
+		// 	console.log('startring trigger ' + testingTrigger);
+		// 	const triggerMedia = smilObject.triggers[testingTrigger];
+		// 	// console.log(JSON.stringify(triggerMedia));
+		// 	set(this.triggersEndless, `${testingTrigger}.play`, true);
+		// 	while (this.triggersEndless[testingTrigger].play) {
+		// 		console.log('playing trigger');
+		// 		await this.processPlaylist(triggerMedia);
+		// 	}
+		// 	console.log('deleting trigger');
+		// 	// remove info about trigger
+		// 	delete this.triggersEndless[testingTrigger];
+		// });
+		// rfidAntenna1.on(RfidAntennaEvent.PLACED, async (tag: number) => {
+		// 	console.log(`${tag} placed antena 3`);
+		// 	console.log('cancelling trigger');
+		// 	const testingTrigger = smilObject.triggerRfid[tag];
+		// 	set(this.triggersEndless, `${testingTrigger}.play`, false);
+		// 	const regionInfo = this.triggersEndless[testingTrigger].regionInfo;
+		// 	// @ts-ignore
+		// 	await this.cancelPreviousMedia(regionInfo);
+		// });
+		// // const rfidAntenna2 = nexmosphere.createRfidAntenna(7);
+		// // rfidAntenna2.on(RfidAntennaEvent.PICKED, async (tag: number) => {
+		// // 	console.log(`${tag} picked antena 7`);
+		// // 	const testingTrigger = smilObject.triggerRfid[tag];
+		// // 	console.log('startring trigger');
+		// // 	const triggerMedia = smilObject.triggers[testingTrigger];
+		// // 	console.log(JSON.stringify(triggerMedia));
+		// // 	set(this.triggersEndless, `${testingTrigger}.play`, true);
+		// // 	while (this.triggersEndless[testingTrigger].play) {
+		// // 		console.log('playing trigger');
+		// // 		await this.processPlaylist(triggerMedia);
+		// // 	}
+		// // });
+		// // rfidAntenna2.on(RfidAntennaEvent.PLACED, async (tag: number) => {
+		// // 	console.log(`${tag} placed antena 7`);
+		// // 	console.log('cancelling trigger');
+		// // 	const testingTrigger = smilObject.triggerRfid[tag];
+		// // 	set(this.triggersEndless, `${testingTrigger}.play`, false);
+		// // 	const regionInfo = this.triggersEndless[testingTrigger].regionInfo;
+		// // 	// @ts-ignore
+		// // 	await this.cancelPreviousMedia(regionInfo);
+		// // });
 	}
 
 	public watchTriggers2 = async(smilObject: SMILFileObject) => {
@@ -616,7 +702,9 @@ export class Playlist {
 	private findFirstFreeRegion(regions: RegionAttributes[]): number {
 		let index = 0;
 		for (const region of regions) {
+			console.log(get(this.currentlyPlaying[region.regionName], 'playing'));
 			if (get(this.currentlyPlaying[region.regionName], 'playing', false) === false) {
+				set(this.currentlyPlaying, `${region.regionName}.playing`, true);
 				return index;
 			}
 			index += 1;
@@ -671,7 +759,7 @@ export class Playlist {
 				break;
 		}
 		// remove record from currentlyPlaying object after successful cancel
-		delete this.currentlyPlaying[regionInfo.regionName];
+		// delete this.currentlyPlaying[regionInfo.regionName];
 	}
 
 	/**
@@ -719,8 +807,8 @@ export class Playlist {
 
 		const video = <SMILVideo> this.currentlyPlaying[regionInfo.regionName];
 		let localRegionInfo = video.regionInfo;
-		console.log(localRegionInfo.regionName);
-		console.log(regionInfo.regionName);
+		// console.log(localRegionInfo.regionName);
+		// console.log(regionInfo.regionName);
 		// cancelling trigger, have to find correct nested region
 		if (localRegionInfo.regionName !== regionInfo.regionName) {
 			localRegionInfo.region.forEach((nestedRegion: RegionAttributes) => {
@@ -729,6 +817,18 @@ export class Playlist {
 				}
 			});
 		}
+		// try {
+		// 	await this.sos.video.stop(
+		// 		video.localFilePath,
+		// 		localRegionInfo.left,
+		// 		localRegionInfo.top,
+		// 		localRegionInfo.width,
+		// 		localRegionInfo.height,
+		// 	);
+		// } catch (err) {
+		// 	console.log('error ty vole' + err);
+		// }
+
 		await this.sos.video.stop(
 			video.localFilePath,
 			localRegionInfo.left,
@@ -765,7 +865,7 @@ export class Playlist {
 			// console.log(await this.isRegionOrNestedActive(regionInfo));
 			while (isNil(triggerValue) && await this.isRegionOrNestedActive(localRegionInfo)) {
 				debug('Cant play html element because its region is occupied by trigger. element: %s, region: %O', filepath, localRegionInfo);
-				await sleep(1000);
+				await sleep(5000);
 			}
 
 			if (!isNil(triggerValue) && localRegionInfo.hasOwnProperty('region')) {
@@ -778,6 +878,11 @@ export class Playlist {
 				localRegionInfo = !isNil(this.triggersEndless[triggerValue].regionInfo) ?
 					this.triggersEndless[triggerValue].regionInfo : localRegionInfo.region[this.findFirstFreeRegion(localRegionInfo.region)];
 				set(this.triggersEndless, `${triggerValue}.regionInfo`, localRegionInfo);
+
+				// console.log('GOT ' + localRegionInfo.regionName);
+				// console.log(this.currentlyPlaying[localRegionInfo.regionName]);
+				// console.log(element);
+				// console.log(element.style);
 
 				// new coordinates for new region
 				element.style.width = `${localRegionInfo.width}px`;
@@ -811,6 +916,7 @@ export class Playlist {
 		): Promise<string | void> => {
 		// set invisible previous element in region for gapless playback if it differs from current element
 		if (!isNil(this.currentlyPlaying[regionInfo.regionName])
+			&& !isNil(get(this.currentlyPlaying[regionInfo.regionName], 'src'))
 			&& get(this.currentlyPlaying[regionInfo.regionName], 'src') !== element.src) {
 			debug('cancelling media: %s from image: %s', this.currentlyPlaying[regionInfo.regionName].src, element.id);
 			await this.cancelPreviousMedia(regionInfo);
@@ -833,6 +939,8 @@ export class Playlist {
 			await sleep(1000);
 		}
 		debug('element playing finished: %O', element);
+		// console.log('element playing finished');
+		// console.log(get(this.currentlyPlaying, `${regionInfo.regionName}.player`));
 
 		// @ts-ignore
 		if (get(this.currentlyPlaying, `${regionInfo.regionName}.player`) === 'stop') {
@@ -852,7 +960,7 @@ export class Playlist {
 		// console.log(await this.isRegionOrNestedActive(regionInfo));
 		while (await this.isRegionOrNestedActive(regionInfo) && !videos[0].hasOwnProperty('triggerValue')) {
 			debug('Cant play video because its region is occupied by trigger. video: %O, region: %O', videos[0], regionInfo);
-			await sleep(1000);
+			await sleep(5000);
 		}
 
 		if (videos[0].hasOwnProperty('triggerValue') && regionInfo.hasOwnProperty('region')) {
@@ -1014,7 +1122,7 @@ export class Playlist {
 	 * @param video - SMILVideo object
 	 */
 	private playVideo = async (video: SMILVideo) => {
-		console.log('single play video');
+		console.log('single play video ' + video.localFilePath);
 		debug('Playing video: %O', video);
 		let regionInfo, parentRegion = regionInfo = video.regionInfo;
 
@@ -1022,8 +1130,15 @@ export class Playlist {
 		// console.log(await this.isRegionOrNestedActive(regionInfo));
 		while (await this.isRegionOrNestedActive(regionInfo) && !video.hasOwnProperty('triggerValue')) {
 			debug('Cant play video because its region is occupied by trigger. video: %O, region: %O', video, regionInfo);
-			await sleep(1000);
+			console.log('waiting to trigger end');
+			await sleep(5000);
 		}
+
+		// while (isNil(video.triggerValue) && await this.isRegionOrNestedActive(regionInfo)) {
+		// 	debug('Cant play video because its region is occupied by trigger. video: %O, region: %O', video, regionInfo);
+		// 	console.log('waiting to trigger end');
+		// 	await sleep(5000);
+		// }
 
 		if (video.hasOwnProperty('triggerValue') && regionInfo.hasOwnProperty('region')) {
 			if (!Array.isArray(regionInfo.region)) {
@@ -1034,7 +1149,7 @@ export class Playlist {
 			// else find first free region in nested regions, if none is free, take first one
 			regionInfo = !isNil(this.triggersEndless[<string> video.triggerValue].regionInfo) ?
 				this.triggersEndless[<string> video.triggerValue].regionInfo : regionInfo.region[this.findFirstFreeRegion(regionInfo.region)];
-
+			console.log(JSON.stringify(regionInfo) + ' region info in video');
 			set(this.triggersEndless, `${video.triggerValue}.regionInfo`, regionInfo);
 		}
 
@@ -1191,7 +1306,9 @@ export class Playlist {
 						continue;
 					}
 					response = await this.playTimedMedia(elem.localFilePath, elem.regionInfo, elem.dur, elem.triggerValue);
+					console.log(`${response} respnse bych se posral`);
 					if (response === 'cancelLoop') {
+						console.log('cancelling looop pico');
 						break;
 					}
 				}
@@ -1234,7 +1351,6 @@ export class Playlist {
 			parent = 'seq';
 		}
 		debug('Playing element with key: %O, value: %O', key, value);
-		console.log(parent);
 		switch (key) {
 			case 'video':
 				if (Array.isArray(value)) {

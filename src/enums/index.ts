@@ -7,6 +7,7 @@ export enum SMILEnums {
 	metaContent = 'content',
 	metaTrigger = 'trigger',
 	metaRfid = 'rfid',
+	metaAntena = 'antennaPorts',
 }
 
 export enum FileStructure {

@@ -151,6 +151,7 @@ describe('Playlist tools component', () => {
 			const sos: SosModule = {
 				fileSystem: 'notSet',
 				video: 'notSet',
+				hardware: 'notSet',
 			};
 			const files = new Files(sos);
 			const playlist = new Playlist(sos, files);
