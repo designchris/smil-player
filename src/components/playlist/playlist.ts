@@ -870,7 +870,7 @@ export class Playlist {
 			}
 
 			let localRegionInfo, parentRegion = localRegionInfo = regionInfo;
-				element.setAttribute('src', filepath);
+			element.setAttribute('src', filepath);
 
 			// console.log(!video.isTrigger);
 			// console.log(await this.isRegionOrNestedActive(regionInfo));
@@ -965,6 +965,7 @@ export class Playlist {
 	 */
 	private playVideosSeq = async (videos: SMILVideo[]) => {
 		console.log('video SEQ called');
+		// @ts-ignore
 		let regionInfo, parentRegion = regionInfo = videos[0].regionInfo;
 
 		// console.log(!video.isTrigger);
@@ -1023,7 +1024,8 @@ export class Playlist {
 			// cancel if video is not same as previous one played in the parent region ( triggers case )
 			if (get(this.currentlyPlaying[parentRegion.regionName], 'playing')
 				&& (get(this.currentlyPlaying[parentRegion.regionName], 'src') !== currentVideo.src
-				|| parentRegion.regionName !== regionInfo.regionName)) {
+				|| parentRegion.regionName !== regionInfo.regionName)
+				&& !isNil(currentVideo.triggerValue)) {
 				console.log('cancelling from parent region');
 				await this.cancelPreviousMedia(parentRegion);
 			}
